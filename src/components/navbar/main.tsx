@@ -8,6 +8,7 @@ import { Avatar } from "./avatar"
 import { useState } from "react"
 import { AuthModal } from "../models/auth-modals"
 import { AuthModalContent } from "./auth-content"
+import Link from "next/link"
 
 
 interface NavbarProp{
@@ -32,9 +33,11 @@ export const Navbar = ({authenticated}:NavbarProp) => {
             <div className="flex items-center md:mr-4">
 
                 {authenticated ? (
-                    <div>
-                        <button>Submit</button>
-                        <Notification user={authenticated.user.id} />
+                    <div className="flex items-center gap-x-6">
+                        <div className="flex items-center gap-x-4">
+                        <Link className=" text-md text-red-400 hover:underline cursor-pointer" href={"/new-product"}>Submit</Link>
+                        <Notification user={authenticated.user} />
+                        </div>
                         <Avatar user={authenticated.user} />
                     </div>
                 ) : (

@@ -47,7 +47,9 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
- 
+  products      Product[]
+  comments      Comment[]
+  upvotes       Upvote[]
   @@map("users")
 }
  
@@ -60,3 +62,69 @@ model VerificationToken {
   @@map("verification_tokens")
 }
 
+
+model Product {
+  id String @id @default(cuid())
+  name String
+  slug String
+  website String
+  twitter String
+  discord String
+  headline String
+  description String
+  images Image[]
+  logo String
+  releaseDate String
+  upvotes Upvote[]
+  comments Comment[]
+  categories Category[]
+  userId String
+  user User @relation(references: [id], fields: [userId])
+  status Status @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model Image { 
+  id String @id @default(cuid())
+  urls String
+  productId String
+  product Product @relation(fields: [productId], references: [id] , onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id String @id @default(cuid())
+  name String
+  products Product[]
+
+}
+
+model Upvote {
+  id String @id @default(cuid())
+  userId String 
+  user User @relation(fields: [userId], references: [id] )
+  productId String
+  product Product @relation(fields: [productId] , references: [id], onDelete: Cascade)
+}
+
+model Comment {
+  id String @id @default(cuid())
+  body String
+  profilePicture String
+  productId String
+  product Product @relation(references: [id], fields: [productId], onDelete: Cascade)
+  userId String
+  user User @relation(fields: [userId] , references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Status {
+  PENDING
+  ACTIVE
+  REJECTED
+}
