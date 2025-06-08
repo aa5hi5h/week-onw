@@ -11,6 +11,7 @@ import { Product } from "@prisma/client"
 import { format } from "date-fns"
 import { ArrowLeft, ChevronDownIcon, Gamepad2, Link2, X } from "lucide-react"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { useCallback, useState } from "react"
 import { toast } from "sonner"
 
@@ -46,6 +47,8 @@ const NewProductPage = () => {
     const [website,setWebsite] = useState<string>("")
     const [Twitter,setTwitter] = useState<string>("")
     const [discord,setDiscord] = useState<string>("")
+
+    const router = useRouter()
 
     const handleInputChange = (e: any) => {
         const productName = e.target.value
@@ -127,6 +130,13 @@ const NewProductPage = () => {
         }
         
     }
+
+
+    const HandleGoToMyProduct = () => {
+        router.push("/my-product")
+    }
+
+    
 
 
     return (
@@ -397,7 +407,7 @@ const NewProductPage = () => {
                         <div className="text-4xl font-bold tracking-tight">Congratulations</div>
                         <p className="text-xl font-light">Your product has been successfully submitted.
                              Our team will review it and get back to you soon.</p>
-                        <button className="bg-red-500 px-6 py-2 w-56 text-white rounded-md">Go to your products</button>
+                        <button onClick={HandleGoToMyProduct} className="bg-red-500 px-6 py-2 w-56 text-white rounded-md">Go to your products</button>
                         <Separator />
                         <div onClick={HandleSubmitAnotherProduct} className="text-red-500 ml-2 hover:underline cursor-pointer ">Submit another product</div>
                     </div>

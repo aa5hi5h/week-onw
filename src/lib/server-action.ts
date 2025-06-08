@@ -9,12 +9,10 @@ export const createProduct = async(prodcut:any) => {
         const authenticated = await auth()
 
         if(!authenticated || !authenticated.user || !authenticated.user.id){
-            console.log("code reaches here")
             throw new Error("You need to be logged in !!!")
         }
 
-
-        console.log("code reaches part 2!!!!")
+        const userId = authenticated.user.id
 
 
         const product = await prisma.product.create({
@@ -30,17 +28,17 @@ export const createProduct = async(prodcut:any) => {
                 releaseDate: prodcut.releaseDate,
                 images: {
                     createMany: {
-                        data: prodcut.images.map((img:string) => ({url:img}))
+                        data: prodcut.images.map((img:string) => ({urls:img}))
                     }
                 },
                 categories: {
-                    connectOrCreate: prodcut.images.map((name:string) => ({
+                    connectOrCreate: prodcut.categories.map((name:string) => ({
                         where: {name},
                         create: {name}
                     }))
                 },
                 user: {
-                    connect : {id: authenticated.user.id}
+                    connect : {id: userId}
                 }
             }
         })
@@ -52,3 +50,26 @@ export const createProduct = async(prodcut:any) => {
         return null
     }
 }
+
+
+export const getProducts = async() => {
+    
+    const authenticated = await auth()
+
+    if(!authenticated || !authenticated.user || !authenticated.user.id){
+        throw new Error("You need to be authenticated before continuing")
+    }
+
+    const userId = authenticated.user.id
+
+    const products = await prisma.product.findMany({
+        where:{
+            userId, 
+        },
+        orderBy:{
+            createdAt: "desc"
+        }
+    })
+
+    return products
+} 
